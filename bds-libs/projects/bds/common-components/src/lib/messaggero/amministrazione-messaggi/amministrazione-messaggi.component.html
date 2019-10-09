@@ -1,0 +1,370 @@
+<section class="main-container d-flex flex-1 flex-dir-column">
+  <div class="sub-header d-flex flex-1">
+    <h2 class="header">Amministrazione Messaggi</h2>
+  </div>
+  <div class="sub-divs d-flex flex-dir-row height-100">
+    <!-- PARTE DESTRA -->
+    <div class="d-flex flex-dot-5 height-100 margin-r-1">
+      <div class="d-flex flex-dir-column height-100">
+        <p-panel id="panelAttivi" header="Attivi" tooltip="Messaggi attivi">
+          <p-table
+            id="tableAttivi"
+            [columns]="cols"
+            [rows]="rowsNumber"
+            [totalRecords]="totalRecords"
+            [value]="amministrazioneMessaggiAttivi"
+            [paginator]="false"
+            [loading]="loading"
+            dataKey="id"
+            selectionMode="single"
+            [(selection)]="selectedMessaggioAttivo"
+            [scrollable]="true"
+            [virtualRowHeight]="35"
+            [virtualScroll]="true"
+            [virtualScrollDelay]="50"
+            scrollHeight="100px"
+            [lazy]="true"
+            [lazyLoadOnInit]="false"
+            (onLazyLoad)="lazyLoad($event, 'attivi')"
+            (onRowSelect)="onRowSelect($event, 'attivi')"
+            (onRowUnselect)="nuovoMessaggio()">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th>Testo</th>
+                <th style="width: 13em">Data pubblicazione</th>
+                <th style="width: 13em">Aziende</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td>
+                  {{rowData.testo}}
+                </td>
+                <td style="text-align:center; width: 13em">
+                  {{rowData.dataPubblicazione | date:'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td style="width: 13em">
+                  {{getNomeAziende(rowData.idAziende)}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-panel>
+        <p-panel id="panelStorico" header="Storico" tooltip="Storico dei messaggi mostrati">
+          <p-table
+            id="tableStorico"
+            [columns]="cols"
+            [rows]="rowsNumberStorico"
+            [totalRecords]="totalRecordsStorico"
+            [value]="amministrazioneMessaggiStorico"
+            [paginator]="false"
+            [loading]="loadingStorico"
+            dataKey="id"
+            selectionMode="single"
+            [(selection)]="selectedMessaggioStorico"
+            [scrollable]="true"
+            [virtualRowHeight]="35"
+            [virtualScroll]="true"
+            [virtualScrollDelay]="150"
+            [lazy]="true"
+            [lazyLoadOnInit]="false"
+            (onLazyLoad)="lazyLoad($event, 'storico')"
+            (onRowSelect)="onRowSelect($event, 'storico')">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th>Testo</th>
+                <th style="width: 13em">Data pubblicazione</th>
+                <th style="width: 13em">Data scadenza</th>
+                <th style="width: 13em">Aziende</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td>
+                  {{rowData.testo}}
+                </td>
+                <td style="text-align:center; width: 13em">
+                  {{rowData.dataPubblicazione | date:'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td style="text-align:center; width: 13em">
+                  {{rowData.dataScadenza | date:'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td style="width: 13em">
+                  {{getNomeAziende(rowData.idAziende)}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-panel>
+      </div>
+    </div>
+    <div class="d-flex flex-dot-5 flex-dir-column min-height-0">
+      <p-panel id="panelDettaglio" tooltip="Dettaglio del messaggio selezionato">
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title">{{getHeaderDettaglio()}}</span>
+          </div>
+        </p-header>
+        <div class="top d-flex flex-1 flex-dir-column padding-left-side height-100">
+          <div class="d-flex align-items-flex-end justify-c-flex-start">
+            <div style="margin-right: 1.3em">
+              <label class="labels" for="templates" style="display: block; padding-bottom: 2px">
+                Scegli da template:
+              </label>
+              <p-dropdown
+                id="templates" [options]="templates" [(ngModel)]="selectedTemplate"
+                placeholder="Seleziona..." [filter]="false" [showClear]="true"
+                [style]="{'width':'20em', 'min-width': 'auto'}"
+                [disabled]="selectedMessaggioAttivo || selectedMessaggioStorico"
+                (onShow)="loadTemplates()" (onChange)="buildFromTemplate($event)">
+              </p-dropdown>
+            </div>
+            <div>
+              <button
+                pButton type="button" label="Nuovo" pTooltip="Scrivi un nuovo messaggio"
+                icon="pi pi-plus" class="ui-button-raised" style="width: 6.4em; margin-right: 1.3em"
+                (click)="nuovoMessaggio()">
+              </button>
+              <button
+                *ngIf="selectedTemplate"
+                pButton type="button" label="Elimina" pTooltip="Elimina il template selezionato"
+                icon="pi pi-trash" class="ui-button-raised" style="width: 6.4em; margin-right: 1.3em"
+                (click)="confirmDeleteTemplate()">
+              </button>
+            </div>
+            <div *ngIf="selectedMessaggioAttivo && notificationForm.enabled" class="d-flex flex-1 justify-c-space-evenly">
+              <h4 style="color: red">* Modifica del messaggio attivo *</h4>
+            </div>
+          </div>
+          <form [formGroup]="notificationForm" class="d-flex flex-dir-column justify-c-space-between height-100">
+            <ul class="list-items">
+              <li>
+                <label class="labels required" for="titolo" style="display: block; padding-bottom: 2px">Titolo:</label>
+                <textarea id="titolo" class="flex-1 titolo" autofocus="true" pInputTextarea placeholder="Inserisci il titolo"
+                  formControlName="titolo">
+                </textarea>
+              </li>
+              <li>
+                <label class="labels required" for="testo" style="display: block; padding-bottom: 2px">Testo:</label>
+                <textarea id="testo" class="flex-1" autofocus="true" pInputTextarea placeholder="Inserisci il testo del messaggio"
+                  formControlName="testo">
+                </textarea>
+              </li>
+              <li class="d-flex justify-c-space-between three-dropdown">
+                <div class="flex-dot-three">
+                    <label class="labels-drops required" for="templates">Severità:</label>
+                    <p-dropdown
+                      id="severita" [options]="severita" formControlName="severita"
+                      placeholder="Seleziona..."  [filter]="false">
+                    </p-dropdown>
+                </div>
+                <div class="flex-dot-three">
+                  <label class="labels-drops required" for="templates">Tipologia:</label>
+                  <p-dropdown
+                    id="tipologia" [options]="tipologie" formControlName="tipologia"
+                    placeholder="Seleziona..."  [filter]="false">
+                  </p-dropdown>
+                </div>
+                <div class="flex-dot-three">
+                  <label class="labels-drops required" for="templates">Invasività:</label>
+                  <p-dropdown
+                    id="invasivita" [options]="invasivita" formControlName="invasivita"
+                    placeholder="Seleziona..." [filter]="false">
+                  </p-dropdown>
+                </div>
+                <!-- <div class="flex-dot-three">
+                  <label class="labels-drops" for="applications">Applicazioni:</label>
+                  <p-multiSelect
+                    id="applications" [options]="applications" optionLabel="nome" formControlName="idApplicazioni"
+                    [panelStyle]="{width: '20em', minWidth:'auto'}"
+                    maxSelectedLabels="2" defaultLabel="Seleziona..." selectedItemsLabel="{0} applicazioni selezionate"
+                    (onPanelShow)="loadApplications()">
+                  </p-multiSelect>
+                </div> -->
+              </li>
+              <li class="d-flex justify-c-space-between three-dropdown three-dropdown-aligner align-items-flex-end">
+                <div class="flex-dot-three">
+                  <label class="labels-drops">Pubblica a partire da:</label>
+                  <p-calendar
+                    formControlName="dataPubblicazione" [showIcon]="true" [showTime]="true" dateFormat="dd/mm/yy"
+                    hideOnDateTimeSelect="true"
+                    [minDate]="minDate" [maxDate]="notificationForm.get('dataScadenza').value">
+                  </p-calendar>
+                </div>
+                <div class="flex-dot-three">
+                  <label class="labels-drops">Scadenza:</label>
+                  <p-calendar
+                    [showIcon]="true" [showTime]="true" dateFormat="dd/mm/yy" formControlName="dataScadenza"
+                    hideOnDateTimeSelect="true"
+                    [minDate]="notificationForm.get('dataPubblicazione').value">
+                  </p-calendar>
+                </div>
+                <div class="flex-dot-three">
+                  <label class="labels-drops">Intervallo in minuti: {{notificationForm.get('intervallo').value}}</label>
+                  <input type="text" pInputText pKeyFilter="int" formControlName="intervallo" maxlength="3"
+                    (input)="onSlideEnd($event.target.value)"/>
+                  <p-slider
+                    formControlName="intervallo" [max]="100" (onSlideEnd)="onSlideEnd($event.value)">
+                  </p-slider>
+                </div>
+              </li>
+              <li>
+                <label class="labels-drops" for="applications">Applicazioni:</label>
+                <p-multiSelect
+                  id="applications" [options]="applications" optionLabel="nome" formControlName="idApplicazioni"
+                  [panelStyle]="{width: '20em', minWidth:'auto'}"
+                  maxSelectedLabels="2" defaultLabel="Seleziona..." selectedItemsLabel="{0} applicazioni selezionate"
+                  (onPanelShow)="loadApplications()">
+                  <ng-template let-applicazioni pTemplate="selectedItems">
+                      <div *ngFor="let app of applicazioni" class="ui-multiselected-item-token ui-corner-all">
+                        <!-- <img src="assets/showcase/images/demo/car/{{val}}.png" style="width:20px;vertical-align:middle;margin-right:.5em" /> -->
+                        <span>{{app.nome}}</span>
+                      </div>
+                      <div *ngIf="!applicazioni || !applicazioni.length" class="ui-multiselected-empty-token ui-corner-all">Scegli le applicazioni...</div>
+                    </ng-template>
+                </p-multiSelect>
+              </li>
+              <div formGroupName="targets">
+              <li style="margin: 1em 0 1em 0;">
+                <label for="checkbox-tutti" class="labels">Manda a tutti:</label>
+                <p-checkbox formControlName="perTutti" binary="true"
+                  [style]="{'padding-left': '.5em', 'vertical-align': 'bottom'}"
+                  (onChange)="onTargetsChange($event, 'perTutti')">
+                </p-checkbox>
+              </li>
+              <li>
+                <label class="labels">Aziende:</label>
+                <p-multiSelect [options]="aziende" optionLabel="nome" formControlName="idAziende"
+                  styleClass="aziende-styles" [panelStyle]="{width: '12em', minWidth:'auto'}"
+                  (onPanelShow)="loadAziende()" (onChange)="onTargetsChange($event.value, 'idAziende')">
+                  <ng-template let-aziende pTemplate="selectedItems">
+                    <div *ngFor="let az of aziende" class="ui-multiselected-item-token ui-corner-all">
+                      <!-- <img src="assets/showcase/images/demo/car/{{val}}.png" style="width:20px;vertical-align:middle;margin-right:.5em" /> -->
+                      <span>{{az.nome}}</span>
+                    </div>
+                    <div *ngIf="!aziende || !aziende.length" class="ui-multiselected-empty-token ui-corner-all">Scegli le aziende...</div>
+                  </ng-template>
+                  <ng-template let-azienda pTemplate="item">
+                    <!-- <img src="assets/showcase/images/demo/car/{{car.label}}.png" style="width:24px;display:inline-block;vertical-align:middle"/> -->
+                    <div style="display: inline-block; vertical-align: middle;">{{azienda.label}}</div>
+                  </ng-template>
+                </p-multiSelect>
+              </li>
+              <li>
+                <label class="labels">Strutture:</label>
+                <p-autoComplete #search
+                  [suggestions]="strutture"
+                  (completeMethod)="filterStrutture($event)"
+                  field="nomeCustom"
+                  formControlName="idStrutture"
+                  [style]="{'width':'100%', 'padding-bottom': '0.2em'}" [inputStyle]="{'width':'100%'}"
+                  placeholder="Cerca strutture..."
+                  [forceSelection]="true"
+                  ariaLabel="Cerca strutture"
+                  autofocus="true"
+                  delay="400"
+                  multiple="true"
+                  emptyMessage="Struttura non trovata"
+                  (onSelect)="onTargetsChange($event, 'idStrutture')"
+                  (onUnselect)="onTargetsChange($event, 'idStrutture')">
+                  <ng-template let-struttura pTemplate="item">
+                      <!-- <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5"> -->
+                        {{struttura.nomeCustom}}
+                      <!-- </div> -->
+                  </ng-template>
+                </p-autoComplete>
+              </li>
+              <li>
+                <label class="labels">Utenti:</label>
+                  <p-autoComplete #search
+                    [suggestions]="persone"
+                    (completeMethod)="filterPersone($event)"
+                    field="descrizioneCustom"
+                    formControlName="idPersone"
+                    [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                    placeholder="Cerca utenti..."
+                    [forceSelection]="true"
+                    ariaLabel="Cerca utenti"
+                    delay="400"
+                    multiple="true"
+                    emptyMessage="Utente non trovato"
+                    (onSelect)="onTargetsChange($event, 'idPersone')"
+                    (onUnselect)="onTargetsChange($event, 'idPersone')">
+                    <ng-template let-persona pTemplate="item">
+                        <!-- <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5"> -->
+                          {{persona.descrizioneCustom}}
+                        <!-- </div> -->
+                    </ng-template>
+                  </p-autoComplete>
+                </li>
+              </div>
+            </ul>
+            <p style="color: red; font-size: 0.7em;">(*) Campi obbligatori</p>
+            <div class="footer d-flex flex-dot-1 padding-left-side">
+              <p-footer class="footer-class">
+                <button
+                  pButton type="button" label="{{notificationForm.disabled ? 'Modifica' : 'Annulla'}}"
+                  pTooltip="{{notificationForm.disabled ? 'Modifica i dettagli del messaggio' : 'Annulla i cambiamenti effettuati'}}"
+                  tooltipPosition="top"
+                  [icon]="notificationForm.disabled ? 'pi pi-pencil' : 'pi pi-times'"
+                  class="ui-button-raised ui-button-secondary button-styles custom-secondary-button"
+                  (click)="notificationForm.disabled ? modificaMessaggio() : annullaModifiche()"
+                  *ngIf="this.selectedMessaggioAttivo">
+                </button>
+                <button
+                  pButton type="button" label="Salva modifiche" pTooltip="Salva le modifiche fatte al template" tooltipPosition="top"
+                  icon="pi pi-save" class="ui-button-raised ui-button-secondary button-styles custom-secondary-button"
+                  *ngIf="selectedTemplate" [disabled]="notificationForm.pristine"
+                  (click)="confirmSaveTemplate()">
+                </button>
+                <button
+                  pButton type="button" label="Salva template" pTooltip="Salva il modello come nuovo template" tooltipPosition="top"
+                  icon="pi pi-save" class="ui-button-raised ui-button-secondary button-styles custom-secondary-button"
+                  (click)="checkAndSave()">
+                </button>
+                <button
+                  pButton type="button" pTooltip="Attiva il messaggio da mostrare agli utenti" tooltipPosition="top"
+                  label="{{!(selectedMessaggioAttivo && notificationForm.enabled) ? 'Attiva messaggio' : 'Salva modifiche'}}"
+                  icon="pi pi-check" class="ui-button-raised ui-button-secondary button-styles custom-secondary-button"
+                  (click)="checkAndSend()"
+                  [disabled]="notificationForm.invalid || notificationForm.disabled">
+                </button>
+              </p-footer>
+            </div>
+          </form>
+        </div>
+      </p-panel>
+    </div>
+  </div>
+</section>
+
+<p-dialog
+  header="Conferma" [(visible)]="display" [modal]="true" [responsive]="true"
+  [style]="{width: '20vw !important'}" appendTo="body">
+  <i class="fas fa-exclamation-triangle warn-class"></i>
+  <p class="d-inline-block">Dai un nome al template:</p>
+  <input type="text" pInputText style="width:100%" [(ngModel)]="nomeTemplate"/>
+  <p-footer class="d-flex justify-c-space-evenly">
+    <button
+      type="button"
+      class="confirm-buttons ui-button-raised ui-button-secondary custom-secondary-button"
+      pButton icon="pi pi-check" (click)="onSaveTemplate(null)" label="Salva" [disabled]="!nomeTemplate || nomeTemplate === ''">
+    </button>
+    <button
+      type="button"
+      class="confirm-buttons ui-button-raised ui-button-secondary custom-secondary-button"
+      pButton icon="pi pi-times" (click)="display=false" label="Annulla"></button>
+  </p-footer>
+</p-dialog>
+
+<p-confirmDialog #cd acceptLabel="Sì" rejectLabel="No" appendTo="body" [style]="{width: '20vw', top: '40%'}">
+  <p-footer class="d-flex justify-c-space-evenly">
+    <button type="button" pButton icon="pi pi-check" label="Sì" (click)="cd.accept()"
+      class="confirm-buttons ui-button-raised ui-button-secondary custom-secondary-button">
+    </button>
+    <button type="button" pButton icon="pi pi-times " label="No" (click)="cd.reject()"
+      class="confirm-buttons ui-button-raised ui-button-secondary custom-secondary-button">
+    </button>
+  </p-footer>
+</p-confirmDialog>
+<p-toast position="top-right"></p-toast>

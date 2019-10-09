@@ -1,0 +1,132 @@
+.d-flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+::ng-deep .ui-dialog-content.ui-widget-content {
+    height: 300px;
+    background-color: rgba(32, 50, 68, 0.980392) !important;
+    color: #f4f4f4 !important;
+}
+
+.popup-container {
+    height: 100%;
+    flex-direction: column;
+    // justify-content: space-between;
+}
+
+.title {
+    flex: 0.1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.title-text{
+    display: inline;
+}
+
+.title-icon{
+    display: inline;
+    vertical-align: -2px;
+}
+.title-success {
+    color: #f4f4f4 !important;
+}
+
+.title-info {
+    color: #f4f4f4 !important;
+}
+
+.title-warning {
+    color: khaki !important;
+}
+
+.title-error {
+    color: red !important;
+}
+
+.body-container {
+    // height: 300px;
+    flex-direction: column;
+    // justify-content: space-between;
+    // height: 100%;
+    overflow: hidden;
+    flex: 0.9;
+    display: flex;
+    padding: 0 10px 0 10px;
+}
+
+.messages-container {
+    flex-direction: row;
+    justify-content: space-between;
+    overflow-y: auto;
+    flex: 0.9;
+}
+
+.buttons-container {
+    flex: 0.1;
+    padding-top: 10px;
+    justify-content: space-around;
+}
+
+.button-enabled {
+    min-width: 15%;
+    background-color: #848484 !important;
+    background: #848484 !important;
+    border: 1px solid #848484 !important;
+    color: #f4f4f4 !important;
+}
+
+.button-disabled {
+    min-width: 15%;
+    background-color: #848484 !important;
+    background: #848484 !important;
+    border: 1px solid #848484 !important;
+    color: #f4f4f4 !important;
+}
+
+.button-enabled:hover {
+    background-color: #f4f4f4 !important;
+    background: #f4f4f4 !important;
+    color: #c8c8c8 !important;
+    border-color: #f4f4f4 !important;
+}
+.button-disabled:hover {
+    background-color: #848484 !important;
+    background: #848484 !important;
+    border: 1px solid #848484 !important;
+    color: #f4f4f4 !important;
+}
+
+.message-body {
+    padding: 10px;
+    text-align: justify;
+}
+
+.arrow-active {
+    cursor: pointer;
+    color: #f4f4f4;
+    align-self: center;
+    position: absolute;
+    top: 40%
+}
+
+.arrow-not-active {
+    cursor: pointer;
+    color: #f4f4f4;
+    opacity: 0.5;
+    align-self: center;
+    position: absolute;
+    top: 40%
+}
+
+.arrow-left {
+    left: 5px;
+}
+
+.arrow-right {
+    right: 5px;
+}

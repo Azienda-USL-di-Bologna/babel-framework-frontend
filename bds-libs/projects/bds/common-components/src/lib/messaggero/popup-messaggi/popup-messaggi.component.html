@@ -1,0 +1,22 @@
+<div *ngIf="popupMessaggiService.messages && popupMessaggiService.messages.length > 0" class = "d-flex popup-container">
+    <div class="title" [ngClass]="{
+        'title-success': popupMessaggiService.messages[popupMessaggiService.messagesIndex]?.severity === 'SUCCESS', 
+        'title-info': popupMessaggiService.messages[popupMessaggiService.messagesIndex]?.severity === 'INFO', 
+        'title-warning': popupMessaggiService.messages[popupMessaggiService.messagesIndex]?.severity === 'WARNING',
+        'title-error': popupMessaggiService.messages[popupMessaggiService.messagesIndex]?.severity === 'ERROR'}">
+        <i class="pi pi pi-info-circle title-icon"></i> <div class="title-text">{{popupMessaggiService.messages[popupMessaggiService.messagesIndex].title}}</div>
+    </div>
+    <div class="body-container">
+        <div class="d-flex messages-container">
+            <div class="arrow-left" [ngClass]="{'arrow-active': popupMessaggiService.messages.length > 1, 'arrow-not-active': popupMessaggiService.messages.length <= 1}"><i class="pi pi-chevron-left" (click)="scrollMessage('left')"></i></div>
+            <div class="message-body" [innerHTML]="popupMessaggiService.messages[popupMessaggiService.messagesIndex].body | sanitizeHtml"></div>
+            <div class="arrow-right" [ngClass]="{'arrow-active': popupMessaggiService.messages.length > 1, 'arrow-not-active': popupMessaggiService.messages.length <= 1}"><i class="pi pi-chevron-right" (click)="scrollMessage('right')"></i></div>
+        </div>
+        <div class="d-flex buttons-container">
+            <button type="button" pButton icon="pi pi-check" label="Ok" class="button-enabled" (click)="ok()"></button>
+            <button [disabled]="!isNotShowAnymorActive()" 
+            type="button" pButton icon="pi pi-clock" label="Non Mostrare più" (click)="notShowAnymore()"
+            [ngClass]="{'button-enabled': isNotShowAnymorActive(), 'button-disabled': !isNotShowAnymorActive()}"></button>
+        </div>
+    </div>
+</div>

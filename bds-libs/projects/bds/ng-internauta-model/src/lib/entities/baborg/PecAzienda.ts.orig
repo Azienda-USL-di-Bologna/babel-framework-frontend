@@ -1,0 +1,12 @@
+import { Entity, ForeignKey } from "@bds/nt-communicator";
+import { Azienda } from "./Azienda";
+import { Pec } from "./Pec";
+
+export class PecAzienda implements Entity {
+    id: number;
+    dataInserimentoRiga: Date;
+    fk_idPec: ForeignKey;
+    fk_idAzienda: ForeignKey;
+    idAzienda: Azienda;
+    idPec: Pec;
+}

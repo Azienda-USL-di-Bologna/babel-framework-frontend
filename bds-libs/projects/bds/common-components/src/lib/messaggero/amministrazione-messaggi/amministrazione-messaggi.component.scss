@@ -1,0 +1,239 @@
+/******* Main Rules *******/
+.d-flex,
+::ng-deep p-panel,
+::ng-deep p-panel > div,
+::ng-deep p-panel > div div.ui-panel-content-wrapper.ng-trigger.ng-trigger-panelContent {
+  display: flex;
+}
+
+.titolo {
+  height: 35px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-dot-1 {
+  flex: 0.1;
+}
+
+.flex-dot-5 {
+  flex: 0.5;
+}
+
+.flex-dot-three {
+  flex: 0.32;
+}
+
+.flex-dir-row {
+  flex-direction: row;
+}
+
+.flex-dir-column,
+::ng-deep p-panel,
+::ng-deep p-panel > div {
+  flex-direction: column;
+}
+
+.padding-left-side {
+  padding: 0.1em 1em;
+}
+
+.justify-c-space-evenly {
+  justify-content: space-evenly;
+}
+.justify-c-flex-start {
+  justify-content: flex-start;
+}
+.justify-c-space-between {
+  justify-content: space-between;
+}
+
+.sub-header {
+  height: 37px;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+}
+
+.required:after {
+  content: "*";
+  color: red;
+  font-size: small;
+  vertical-align: top;
+}
+
+.margin-r-1 {
+  margin-right: 1em;
+}
+
+/******* Table e Tabview *******/
+.height-100,
+p-table,
+::ng-deep p-table > div,
+::ng-deep p-table > div > div,
+::ng-deep p-table > div > div > div,
+::ng-deep p-panel > div,
+::ng-deep p-panel > div div.ui-panel-content-wrapper.ng-trigger.ng-trigger-panelContent,
+::ng-deep #panelDettaglio {
+  height: 100%;
+}
+
+::ng-deep p-panel > div div.ui-panel-content-wrapper.ng-trigger.ng-trigger-panelContent {
+  min-height: 0;
+}
+
+::ng-deep #tableAttivi > div > div > div div.ui-table-scrollable-body {
+  max-height: 85% !important;
+  height: 85% !important;
+  overflow-x: hidden; /* In alcuni casi sullo scroll compare la barra orizzontale, è un quickfix non la soluzione ottimale */
+}
+
+::ng-deep #tableStorico > div > div > div div.ui-table-scrollable-body {
+  max-height: 90% !important;
+  height: 90% !important;
+}
+p-tabview {
+  width: 100%;
+}
+::ng-deep p-panel > div div div.ui-panel-content.ui-widget-content {
+  padding: 0.3em !important;
+  overflow: auto;
+}
+::ng-deep #panelDettaglio > div div div.ui-panel-content.ui-widget-content {
+  flex: 1;
+}
+::ng-deep #panelDettaglio > div div div.ui-panel-content.ui-widget-content+div.ui-panel-footer {
+  display: none;
+}
+::ng-deep #panelAttivi {
+  flex: 0.15 1 auto;
+  height: 250px;
+  /* min-height: 200px; */
+  margin-bottom: 0.2em;
+}
+::ng-deep #panelStorico {
+  flex: 0.85;
+  min-height: 388px;
+}
+
+::ng-deep .ui-table-loading-content {
+  height: auto;
+}
+
+/******* List *******/
+.list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.labels,
+.labels-drops {
+  font-size:medium;
+  font-weight: bold;
+}
+.labels-drops {
+  display: block;
+  padding-bottom: 2px;
+}
+.align-items-flex-end {
+  align-items: flex-end;
+}
+textarea {
+  resize: none;
+  height: 130px;
+}
+
+/*** Responsive Rules */
+@media screen and (max-width: 720px) {
+  .three-dropdown {
+    flex-direction: column;
+  }
+  .three-dropdown-aligner {
+    align-items: unset !important;
+  }
+
+  #panelDettaglio {
+    height: auto;
+  }
+
+  #panelStorico {
+    max-height: 676px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .sub-divs {
+    flex-direction: column;
+    height: auto !important;
+  }
+  .margin-r-1 {
+    margin-right: 0;
+    margin-bottom: 1em;
+  }
+  #panelDettaglio {
+    height: auto;
+  }
+
+  #panelStorico {
+    max-height: 676px;
+  }
+}
+
+/* Quickfix per l'overflow */
+.min-height-0 {
+  min-height: 0;
+}
+
+/******* Multiselect *******/
+:host ::ng-deep .ui-multiselected-item-token,
+:host ::ng-deep .ui-multiselected-empty-token {
+  padding: 2px 4px;
+  margin: 0 0.286em 0 0;
+  display: inline-block;
+  vertical-align:middle;
+  height: 1.7em;
+}
+
+:host ::ng-deep .ui-multiselected-item-token {
+  background: #007ad9;
+  color: #ffffff;
+  margin-top: 0.03em;
+}
+
+:host ::ng-deep .ui-multiselected-empty-token {
+  margin-top: 0.03em;
+}
+
+/******* Footer *******/
+.footer-class {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-around;
+  padding: 1em;
+}
+
+/******* Buttons *******/
+.button-styles {
+  height: 40px;
+  width: 210px;
+}
+
+.confirm-buttons {
+  width: 97px !important;
+}
+
+/******* Autocomplete *******/
+::ng-deep body .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container {
+  max-height: 90px;
+  overflow: auto;
+}
+
+::ng-deep body .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-token {
+  margin-top: 0.07em;
+}

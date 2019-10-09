@@ -1,0 +1,18 @@
+{
+  "name": "@bds/ng-internauta-model",
+  "version": "0.0.78",
+  "peerDependencies": {
+    "@angular/common": "^7.1.2",
+    "@angular/core": "^7.1.2",
+    "@angular/platform-browser-dynamic": "^7.1.2",
+    "@angular/compiler": "^7.1.2",
+    "@angular/platform-browser": "^7.1.2",
+    "@angular/cdk": "^7.3.4",
+    "rxjs": "^6.0.0",
+    "zone.js": "^0.8.26",
+    "@bds/nt-communicator": "~0.0.29",
+    "@nfa/next-sdr": "^1.0.32-bds",
+    "@nfa/core": "2.0.0",
+    "@nfa/ref": "2.1.1"
+  }
+}
