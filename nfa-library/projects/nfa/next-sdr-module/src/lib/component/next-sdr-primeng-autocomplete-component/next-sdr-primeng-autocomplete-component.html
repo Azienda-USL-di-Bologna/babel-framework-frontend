@@ -1,0 +1,9 @@
+<p-autoComplete #autocomplete [minLength]="_minLength" [(ngModel)]="value" (ngModelChange)="valueChange.emit($event)"
+    [size]="_size" [field]="_field" [dropdown]="_dropdown" [multiple]="_multiple" [placeholder]="_placeholder"
+    [disabled]="_disabled" [dataKey]="_dataKey" [emptyMessage]="_emptyMessage" [appendTo]="_appendTo"
+    (onSelect)="onSelect.emit($event)" [style]="style" [inputStyle]="inputStyle">
+    <ng-template *ngIf="customTemplate" let-value pTemplate="item">
+        <ng-container *ngTemplateOutlet="customTemplate;context:{'value':value} ">
+        </ng-container>
+    </ng-template>
+</p-autoComplete>

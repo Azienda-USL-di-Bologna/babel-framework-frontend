@@ -1,0 +1,7 @@
+<p *ngIf="_col.fieldType === 'object' || _col.fieldType === 'string' || _col.fieldType === 'number'"> {{extractCorrectValueFromObjectAndDecode()}} </p>
+<p *ngIf="_col.fieldType === 'boolean'"> {{extractCorrectValueFromObject() !== null ? extractCorrectValueFromObject() ? 'Si' : 'No' : ''}} </p>
+<p *ngIf="_col.fieldType === 'Date'"> {{extractCorrectValueFromObject() | date:(_col.format && _col.format.viewFormat) ? _col.format.viewFormat : 'dd/MM/yyyy'}} </p>
+<p *ngIf="_col.fieldType === 'DateTime'"> {{extractCorrectValueFromObject() | date:(_col.format && _col.format.viewFormat) ? _col.format.viewFormat : 'dd/MM/yyyy HH:mm'}} </p>
+<button *ngIf="_col.fieldType === 'button'"
+        pButton [label]="_col.label ? _col.label : '' " [icon]="_col.icon ? _col.icon : '' "
+        (click)="_col.onClick(_rowData)"></button>

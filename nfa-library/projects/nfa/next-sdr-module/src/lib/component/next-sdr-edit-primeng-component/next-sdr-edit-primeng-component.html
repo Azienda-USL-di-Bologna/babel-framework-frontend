@@ -1,0 +1,29 @@
+
+ <!-- ===================== componente MODIFICA ===================================================== -->
+
+<!--suppress ALL -->
+ <div>
+  <div>
+    <p-messages #messageez [key]="_P_MESSAGE_KEY"></p-messages>
+  </div>
+  <div>
+    <!--<ng-template #emptyTemplate>-->
+      <!--<div> Vuoto</div>-->
+    <!--</ng-template>-->
+    <ng-container #vc>
+    </ng-container>
+  </div>
+  <div class="ui-g" *ngIf="!_hideFooter">
+      <div class="ui-g-2">
+          <button type="button" pButton icon="fa fa-close"  [label]="_cancelLabel" (click)="cancel()" class="editButton editCancelButton"></button>
+      </div>
+      <div class="ui-g-offset-8 ui-g-2">
+          <button type="button" pButton icon="fa fa-check"  [label]="_saveLabel" (click)="save()" [disabled]="_disableSaveButton" class="editButton editSaveButton"></button>
+      </div>
+  </div>
+    <!--<p-footer *ngIf="!_hideFooter">-->
+      <!---->
+    <!--</p-footer>-->
+</div>
+
+

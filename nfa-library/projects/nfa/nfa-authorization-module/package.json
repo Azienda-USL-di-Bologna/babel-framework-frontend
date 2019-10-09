@@ -1,0 +1,26 @@
+{
+  "name": "@nfa/authorization",
+  "version": "2.0.0",
+  "description": "nfa/authorization servizi per l'autenticazione e la gestione dell'account",
+  "keywords": [
+    "angular",
+    "next"
+  ],
+  "license": "Copyright Next SRL",
+  "author": {
+    "name": "Francesco Longhitano"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@nfa/ref": "^2.0.0",
+    "@nfa/core": "^2.0.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "rxjs": "^6.3.0",
+    "@nfa/ref": "^2.0.0",
+    "@nfa/core": "^2.0.0"
+  }
+}

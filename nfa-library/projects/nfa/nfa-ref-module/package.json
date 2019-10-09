@@ -1,0 +1,21 @@
+{
+  "name": "@nfa/ref",
+  "version": "2.1.1",
+  "description": "nfa/ref interfaccie per nfa",
+  "keywords": [
+    "angular",
+    "next"
+  ],
+  "license": "Copyright Next SRL",
+  "author": {
+    "name": "Francesco Longhitano"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0"
+  }
+}

@@ -1,0 +1,22 @@
+<div *ngIf="isSearchEnable(_col)" [ngSwitch]="getWidgetToUse()">
+
+  <input #input *ngSwitchCase="'input'" pInputText type="text" class="table-search-input"
+         (input)="startSearch($event.target.value)"
+         style="width:100%">
+
+  <p-calendar #calendar *ngSwitchCase="'calendar'" class="table-search-calendar" [locale]="_locale"
+              [dateFormat]="_col.format && _col.format.calendarFormat ? _col.format.calendarFormat : 'dd M yy'"
+              appendTo="body" showButtonBar="true"
+              (onSelect)="onCalendarSelect($event)" (onInput)="onCalendarInput($event)"
+              (onClearClick)="onCalendarClear($event)">
+  </p-calendar>
+
+  <p-triStateCheckbox #check *ngSwitchCase="'triStateCheckbox'" class="table-search-triStateCheckbox"
+                        (onChange)="_tableComponent.filter($event.value, calculateSearchField(_col), _col.filterMatchMode)">
+  </p-triStateCheckbox>
+
+  <p-dropdown *ngSwitchCase="'dropdown'" placeholder=" " class="table-search-dropdown" appendTo="body"
+              [options]="createOptionsForDropdown()" showClear="true"
+              (onChange)="onChangeDropdownForDecode($event.value)"
+  ></p-dropdown>
+</div>

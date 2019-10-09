@@ -1,0 +1,37 @@
+{
+  "name": "@nfa/next-sdr",
+  "version": "1.1.6-bds",
+  "description": "next-sdr utilità di FE per la gestione di next sdr",
+  "keywords": [
+    "angular",
+    "next",
+    "sdr"
+  ],
+  "license": "Copyright Next SRL",
+  "author": {
+    "name": "Francesco Longhitano"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@angular/forms": "^6.1.0",
+    "@angular/router": "^6.1.0",
+    "@nfa/core": "~2.0.0",
+    "@nfa/ref": "~2.1.1",
+    "rxjs": "^6.3.0",
+    "lodash": "^4.17.11",
+    "@types/lodash": "4.14.118",
+    "primeng": "^6.1.5"
+  },
+  "devDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@angular/forms": "^6.1.0",
+    "@angular/router": "^6.1.0",
+    "@nfa/core": "~2.0.0",
+    "@nfa/ref": "~2.1.1",
+    "lodash": "^4.17.11",
+    "@types/lodash": "4.14.118",
+    "primeng": "^6.1.5"
+  }
+}

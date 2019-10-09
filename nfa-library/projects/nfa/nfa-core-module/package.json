@@ -1,0 +1,23 @@
+{
+  "name": "@nfa/core",
+  "version": "2.0.0",
+  "description": "nfa/core servizi di base per l'utilizzo del framework interno",
+  "keywords": [
+    "angular",
+    "next"
+  ],
+  "license": "Copyright Next SRL",
+  "author": {
+    "name": "Francesco Longhitano"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@nfa/ref": "^2.0.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@nfa/ref": "^2.0.0"
+  }
+}

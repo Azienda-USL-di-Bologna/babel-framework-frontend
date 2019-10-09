@@ -1,0 +1,457 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "nfa-lib": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/nfa",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css",
+//              "node_modules/primeng/resources/primeng.min.css",
+//              "node_modules/primeng/resources/primeng.css",
+              "./node_modules/primeicons/primeicons.css",
+              "src/themes/nova-next/theme.css",
+              "./node_modules/primeng/resources/primeng.min.css",
+              "./node_modules/font-awesome/css/font-awesome.css"
+
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "nfa-lib:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "nfa-lib:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "nfa-lib:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@nfa/ref": {
+      "root": "projects/nfa/nfa-ref-module",
+      "sourceRoot": "projects/nfa/nfa-ref-module/src",
+      "projectType": "library",
+      "prefix": "cmn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nfa/nfa-ref-module/tsconfig.lib.json",
+            "project": "projects/nfa/nfa-ref-module/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nfa/nfa-ref-module/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nfa/nfa-ref-module/src/test.ts",
+            "tsConfig": "projects/nfa/nfa-ref-module/tsconfig.spec.json",
+            "karmaConfig": "projects/nfa/nfa-ref-module/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nfa/nfa-ref-module/tsconfig.lib.json",
+              "projects/nfa/nfa-ref-module/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@nfa/core": {
+      "root": "projects/nfa/nfa-core-module",
+      "sourceRoot": "projects/nfa/nfa-core-module/src",
+      "projectType": "library",
+      "prefix": "cmn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nfa/nfa-core-module/tsconfig.lib.json",
+            "project": "projects/nfa/nfa-core-module/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nfa/nfa-core-module/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nfa/nfa-core-module/src/test.ts",
+            "tsConfig": "projects/nfa/nfa-core-module/tsconfig.spec.json",
+            "karmaConfig": "projects/nfa/nfa-core-module/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nfa/nfa-core-module/tsconfig.lib.json",
+              "projects/nfa/nfa-core-module/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@nfa/authorization": {
+      "root": "projects/nfa/nfa-authorization-module",
+      "sourceRoot": "projects/nfa/nfa-authorization-module/src",
+      "projectType": "library",
+      "prefix": "cmn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nfa/nfa-authorization-module/tsconfig.lib.json",
+            "project": "projects/nfa/nfa-authorization-module/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nfa/nfa-authorization-module/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nfa/nfa-authorization-module/src/test.ts",
+            "tsConfig": "projects/nfa/nfa-authorization-module/tsconfig.spec.json",
+            "karmaConfig": "projects/nfa/nfa-authorization-module/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nfa/nfa-authorization-module/tsconfig.lib.json",
+              "projects/nfa/nfa-authorization-module/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@nfa/next-sdr": {
+      "root": "projects/nfa/next-sdr-module",
+      "sourceRoot": "projects/nfa/next-sdr-module/src",
+      "projectType": "library",
+      "prefix": "cmn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nfa/next-sdr-module/tsconfig.lib.json",
+            "project": "projects/nfa/next-sdr-module/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/nfa/next-sdr-module/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nfa/next-sdr-module/src/test.ts",
+            "tsConfig": "projects/nfa/next-sdr-module/tsconfig.spec.json",
+            "karmaConfig": "projects/nfa/next-sdr-module/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nfa/next-sdr-module/tsconfig.lib.json",
+              "projects/nfa/next-sdr-module/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+
+
+
+    "bds-lib-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "bds-lib:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "bds-lib:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@bds/nt-communicator": {
+      "root": "projects/bds/nt-communicator",
+      "sourceRoot": "projects/bds/nt-communicator/src",
+      "projectType": "library",
+      "prefix": "cmn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/bds/nt-communicator/tsconfig.lib.json",
+            "project": "projects/bds/nt-communicator/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/bds/nt-communicator/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/bds/nt-communicator/src/test.ts",
+            "tsConfig": "projects/bds/nt-communicator/tsconfig.spec.json",
+            "karmaConfig": "projects/bds/nt-communicator/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/bds/nt-communicator/tsconfig.lib.json",
+              "projects/bds/nt-communicator/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@bds/primeng-plugin": {
+      "root": "projects/bds/primeng-plugin",
+      "sourceRoot": "projects/bds/primeng-plugin/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/bds/primeng-plugin/tsconfig.lib.json",
+            "project": "projects/bds/primeng-plugin/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/bds/primeng-plugin/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/bds/primeng-plugin/src/test.ts",
+            "tsConfig": "projects/bds/primeng-plugin/tsconfig.spec.json",
+            "karmaConfig": "projects/bds/primeng-plugin/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/bds/primeng-plugin/tsconfig.lib.json",
+              "projects/bds/primeng-plugin/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@bds/ng-baborg-model": {
+      "root": "projects/bds/ng-baborg-model",
+      "sourceRoot": "projects/bds/ng-baborg-model/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/bds/ng-baborg-model/tsconfig.lib.json",
+            "project": "projects/bds/ng-baborg-model/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/bds/ng-baborg-model/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/bds/ng-baborg-model/src/test.ts",
+            "tsConfig": "projects/bds/ng-baborg-model/tsconfig.spec.json",
+            "karmaConfig": "projects/bds/ng-baborg-model/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/bds/ng-baborg-model/tsconfig.lib.json",
+              "projects/bds/ng-baborg-model/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@bds/nt-jwt-login": {
+      "root": "projects/bds/nt-jwt-login",
+      "sourceRoot": "projects/bds/nt-jwt-login/src",
+      "projectType": "library",
+      "prefix": "lgn",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/bds/nt-jwt-login/tsconfig.lib.json",
+            "project": "projects/bds/nt-jwt-login/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/bds/nt-jwt-login/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/bds/nt-jwt-login/src/test.ts",
+            "tsConfig": "projects/bds/nt-jwt-login/tsconfig.spec.json",
+            "karmaConfig": "projects/bds/nt-jwt-login/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/bds/nt-jwt-login/tsconfig.lib.json",
+              "projects/bds/nt-jwt-login/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "bds-lib"
+}
