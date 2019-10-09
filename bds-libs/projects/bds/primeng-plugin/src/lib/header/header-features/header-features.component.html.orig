@@ -1,0 +1,29 @@
+<p-toast key="logoutWarning" styleClass="" position="center" ></p-toast>
+<p-confirmDialog key="ssoSessionExpiredWarning" icon="pi pi-exclamation-triangle" appendTo="body"></p-confirmDialog>
+<div class="cl-icon-wrapper">
+  <div *ngIf="hasPermessoDelega && openedScrivania && !utenteConnesso.isUserChanged()" (click)="this.onCambioUtenteClick()" class="cambia-utente">
+    Cambia Utente
+  </div>
+    <!-- User full name-->
+  <div class="cl-user-name width-auto">
+      {{utenteConnesso && _params.showUserFullName ? utenteConnesso.getUtente().idPersona.nome + ' ' + utenteConnesso.getUtente().idPersona.cognome : ''}}
+  </div>
+  <!-- menu -->
+  <p-slideMenu #slideMenu class="slidemenu-class width-auto" [model]="itemsMenu" [popup]="true" [backLabel]="'Indietro'"></p-slideMenu>
+  <button *ngIf="_params.showUserFullName" #btn class="user-button mr-8" type="button" pButton icon="pi pi-user pi-icon-style" (click)="slideMenu.toggle($event)"></button>
+  <!-- logout -->
+  <img width="24" src={{_params.logoutIconPath}} (click)="onLogout()" alt="logout"/>
+</div>
+
+<p-dialog
+appendTo="body"
+header="Cambio Utente"
+[(visible)]="this.cambioUtentePopupVisibile"
+[modal]="true"
+[responsive]="false"
+[minHeight]="100"
+[minWidth]="490"
+[focusOnShow]="false"
+[styleClass]="'p-sm-10 p-md-4'">
+<prp-cambio-utente (onUtenteSelectedEmitter)="this.onCambioUtente($event)"></prp-cambio-utente>
+</p-dialog>

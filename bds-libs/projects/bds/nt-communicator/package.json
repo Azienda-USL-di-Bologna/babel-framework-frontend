@@ -1,0 +1,15 @@
+{
+  "name": "@bds/nt-communicator",
+  "version": "0.0.34",
+  "scripts": {
+    "gdm": "copyfiles --flat src/lib/intimus/primus.js ../../../../../dist/bds/nt-communicator/esm2015/lib/intimus"
+  },
+  "peerDependencies": {
+    "@angular/common": "^8.1.3",
+    "@angular/core": "^8.1.3",
+    "@nfa/next-sdr": "^1.1.0-bds",
+    "@nfa/core": "^2.0.0",
+    "@nfa/ref": "^2.1.1",
+    "bowser": "^2.1.0"
+  }
+}

@@ -1,0 +1,171 @@
+import { HeaderFeaturesConfig } from "./header-features-config";
+import { Component, OnInit, Input } from "@angular/core";
+import { UtenteUtilities, NtJwtLoginService, LoginType, SessionManager } from "@bds/nt-jwt-login";
+import { MenuItem, DialogService, MessageService } from "primeng/api";
+import { Utente } from "@bds/ng-internauta-model";
+import { ProfiloComponent } from "./profilo/profilo.component";
+import { HeaderFeaturesService } from "./header-features.service";
+import { Subscription } from "rxjs";
+
+
+
+@Component({
+  selector: "prp-header-features",
+  templateUrl: "./header-features.component.html",
+  styleUrls: ["./header-features.component.css"]
+})
+export class HeaderFeaturesComponent implements OnInit {
+
+  public utenteConnesso: UtenteUtilities;
+  public itemsMenu: MenuItem[] = [];
+  public cambioUtentePopupVisibile = false;
+  private _addToMenu: MenuItem[] = [];
+  private onTimeOutWarningSubscribbed = false;
+  private subscriptions: Subscription[] = [];
+  public hasPermessoDelega: boolean;
+  private actualRoute: string;
+  public openedScrivania: boolean;
+
+  public _params: HeaderFeaturesConfig;
+  @Input("params")
+  set params(params: HeaderFeaturesConfig) {
+    if (params !== undefined) {
+      this._params = params;
+      if (this.utenteConnesso) {
+        this.buildMenu();
+      }
+    }
+  }
+
+  @Input("addToMenu")
+  set addToMenu(addToMenu: MenuItem[]) {
+    if (addToMenu !== undefined) {
+      this._addToMenu = addToMenu;
+      if (this.utenteConnesso && this._params) {
+        this.buildMenu();
+      }
+    }
+  }
+
+  constructor(private loginService: NtJwtLoginService,
+              private sessionManager: SessionManager,
+              public dialogService: DialogService,
+              public messageService: MessageService) { }
+
+  ngOnInit() {
+    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+      if (utente) {
+        this.utenteConnesso = utente;
+        this.hasPermessoDelega = this.utenteConnesso.getUtente().hasPermessoDelega;
+        // const jsonParametri = utente.getUtente().aziendaLogin.parametri;
+        // this.logoutUrlTemplate = jsonParametri["logoutUrl"] as string;
+        this.buildMenu();
+        if (!!this._params.logoutWarning && !this.onTimeOutWarningSubscribbed) {
+          this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe( (countdown: number) => {
+              this.messageService.clear("logoutWarning");
+              this.messageService.add({
+                severity: "warn",
+                summary: "Attenzione",
+                detail: `Uscita tra ${countdown} secondi...`,
+                key: "logoutWarning",
+                sticky: true,
+                closable: true
+              });
+          }));
+          this.subscriptions.push(this.sessionManager.onIdleEnd.subscribe( () => {
+            this.messageService.clear("logoutWarning");
+          }));
+        this.onTimeOutWarningSubscribbed = true;
+      }
+    }
+    });
+    // extrat the path; needed to show the button for Grigione solo su scrivania
+    this.actualRoute = window.location.pathname;
+
+    this.openedScrivania =
+      this.actualRoute.search("scrivania") !== -1 ||
+      this.actualRoute.search("attivita") !== -1 ? true : false;
+  }
+
+
+  buildMenu() {
+    this.itemsMenu = [];
+    if (this._params.showProfilo) {
+      this.itemsMenu.push({
+        label: "Profilo utente",
+        icon: "pi pi-fw pi-user-plus",
+        command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
+      });
+    }
+    if (this._params.showManuale) {
+      this.itemsMenu.push({
+        label: "Manuale",
+        icon: "pi pi-fw pi-info-circle slide-icon",
+        command: () => { window.open(this._params.BABELMAN_URL); }
+      });
+    }
+    if (this._params.showCambioUtente && !this.utenteConnesso.isUserChanged()) {
+      if (this.utenteConnesso.getUtente().isDemiurgo() || this.utenteConnesso.getUtente().hasPermessoDelega) {
+        this.itemsMenu.push({
+          label: "Cambia utente",
+          icon: "pi pi-fw pi-sign-in",
+          command: () => { this.onCambioUtenteClick(); }
+        });
+      }
+    }
+    this.itemsMenu.push(...this._addToMenu);
+  }
+
+  onLogout() {
+    this.loginService.logout(this._params.logoutRedirectRoute);
+  }
+
+  onCambioUtenteClick() {
+    this.cambioUtentePopupVisibile = true;
+  }
+
+  onCambioUtente(utente: Utente) {
+    console.log("header onCambioUtente");
+    this.cambioUtentePopupVisibile = false;
+
+    if (utente) {
+      let url = "''";
+
+      let user: string;
+      let realUser: string;
+      if (this.loginService.loginMethod === LoginType.SSO) {
+        user = utente.idPersona.codiceFiscale;
+        realUser = this.utenteConnesso.getUtente().idPersona.codiceFiscale;
+      } else {
+        user = utente.username;
+        realUser = this.utenteConnesso.getUtente().username;
+      }
+
+      if (window.location.href.indexOf("?") >= 0) {
+        // tslint:disable-next-line:max-line-length
+        url = window.location.href.toString() + "&impersonatedUser=" + user + "&realUser=" + realUser + "&aziendaImpersonatedUser=" + utente.idAzienda.id;
+      } else {
+        // tslint:disable-next-line:max-line-length
+        url = window.location.href.toString() + "?impersonatedUser=" + user + "&realUser=" + realUser + "&aziendaImpersonatedUser=" + utente.idAzienda.id;
+      }
+      window.open(url, "_blank");
+    }
+  }
+
+  showSettings(component, header, width, height, data) {
+    const ref = this.dialogService.open(component, {
+      data: data,
+      header: header,
+      width: width,
+      styleClass: "dialog-class",
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
+    });
+  }
+
+  doNothingNodeClick(event: any) {
+    if (event && event.originalEvent) {
+      event.preventDefault();
+    }
+  }
+
+}

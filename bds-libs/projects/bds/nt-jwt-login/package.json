@@ -1,0 +1,17 @@
+{
+  "name": "@bds/nt-jwt-login",
+  "version": "0.0.50",
+  "peerDependencies": {
+    "@angular/common": "~7.1.2",
+    "@angular/core": "~7.1.2",
+    "@angular/compiler": "~7.1.2",
+    "@angular/platform-browser": "~7.1.2",
+    "@angular/platform-browser-dynamic": "~7.1.2",
+    "rxjs": "~6.0.0",
+    "zone.js": "~0.8.26",
+    "@ng-idle/core": "^8.0.0-beta.4",
+    "@ng-idle/keepalive": "^8.0.0-beta.4",
+    "@bds/nt-communicator": "~0.0.29",
+    "@bds/ng-internauta-model": "~0.0.50"
+  }
+}

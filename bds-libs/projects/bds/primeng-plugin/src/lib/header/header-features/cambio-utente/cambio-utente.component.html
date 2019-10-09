@@ -1,0 +1,26 @@
+<div
+    class="p-grid cambio"
+    (keydown.tab)="onKeyTabPressed($event)"
+    (keydown.enter)="onUtenteSelectionConfirmed()">
+    <div class="p-col">
+        <p-autoComplete
+            #autoComplete
+            [(ngModel)]="text"
+            (onClear)="this.onClear()"
+            [suggestions]="this.personeSuggestions"
+            field="idPersona.descrizione"
+            (onSelect)="onUtenteSelected($event)"
+            (completeMethod)="search($event.query)"
+            [autoZIndex]="true"
+            appendTo="body"
+            [style]="{'width':'100%'}"
+            [inputStyle]="{'width':'91%'}"
+            placeholder="Cerca o scegli con la freccia ..."
+            [dropdown]="true">
+        </p-autoComplete>
+        <div class="p-grid button-wrapper">
+            <button pButton icon="pi pi-check" class="button-styles" label="Conferma" (click)="onUtenteSelectionConfirmed()"></button>
+            <button pButton icon="pi pi-times" class="button-styles button-margin-left" label="Annulla" (click)="onClose()"></button>
+        </div>
+    </div>
+</div>

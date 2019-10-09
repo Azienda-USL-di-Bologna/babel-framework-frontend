@@ -1,0 +1,36 @@
+.ui-autocomplete-panel {
+    z-index: 100000;
+}
+
+:host>>> body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+    color: white;
+}
+
+.button-wrapper {
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.button-styles {
+    width: 100px;
+    margin: 10px;
+}
+
+
+.button-margin-left {
+    margin-left: 100px;
+}
+
+::ng-deep body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-list-item {
+    background-color: #203142;
+    color:#F4F4F4;
+    }
+::ng-deep body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-list-item.ui-state-highlight {
+    background-color: #F4F4F4;
+    color: black;
+    font-weight: bold;
+}
+
+::ng-deep body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+    color: white;
+}

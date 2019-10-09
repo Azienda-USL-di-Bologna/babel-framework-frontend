@@ -1,0 +1,13 @@
+<div aria-hidden="true" class="height64 center-vertically custom-header">
+  <div class="p-col-12 p-grid p-nogutter px-0"> <!--p-nogutter-->
+      <div class="p-md-7 p-sm-12 header-left-style ">
+        <img class="logo" src={{logoPath}} alt="logo"/>
+        <span role="heading" aria-level="1" class="title-header padding-top-12">{{appName}}</span>
+      </div>
+      <div class="p-md-5 p-sm-12 icons-wrapper">
+        <ng-container *ngTemplateOutlet="addToRight || defaultTemplate"></ng-container>
+        <ng-template #defaultTemplate>
+        </ng-template>
+      </div>
+    </div>
+</div>
