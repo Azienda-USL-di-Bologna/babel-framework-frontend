@@ -1,0 +1,29 @@
+<div id="idGlobalAppComponent" *ngIf="_readyToRender">
+  <div *ngIf="_accountUserLogged && _accountUserRoleSelected">
+    <div class="layout-wrapper" >
+      <div class="layout-toolbar">
+        <app-toolbar-component [(menuExpanded)]="_expandedMenu" [(loggedUser)] = "_userData"></app-toolbar-component>
+      </div>
+      <div class = "layout-sidebar" *ngIf="_expandedMenu">
+         <app-menu-component></app-menu-component>
+      </div>
+      <div class="layout-main" [ngClass]="_expandedMenu ? 'menupage' : 'fullpage'">
+        <div class="layout-main-content">
+          <router-outlet></router-outlet>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div *ngIf="_accountUserLogged && !_accountUserRoleSelected" class="mainframe">
+    <app-domini-selection-component></app-domini-selection-component>
+  </div>
+  <div *ngIf="!_accountUserLogged" class="mainframe">
+    <app-login-component></app-login-component>
+  </div>
+</div>
+
+
+<app-toast-message-component></app-toast-message-component>
+<app-dialog-message-component></app-dialog-message-component>

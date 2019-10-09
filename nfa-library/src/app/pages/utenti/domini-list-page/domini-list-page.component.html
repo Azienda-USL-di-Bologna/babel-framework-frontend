@@ -1,0 +1,179 @@
+<div class="ui-g-12">
+  <!--<app-table-toolbar class="ui-g-12" [setItems]="dominiToolbarItems" [setTitle]="dominiToolbarTitle"  [hidden]="editing"></app-table-toolbar>-->
+  <p-table #dtDomini
+           [columns]="_cols" [rows]="10"
+           [paginator]="true" [autoLayout]="true"
+           [rowsPerPageOptions]="[5,10,15,20,25,50,100]"
+           [lazy]="true"
+           selectionMode="single"
+           width ="100%"
+           class="ui-g-12"
+           [hidden]="editing"
+
+  >
+    <!--TEMPLATE PER HEADERS-->
+    <ng-template pTemplate="header" let-columns>
+      <tr >
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                      ariaLabelDesc="Activate to sort in descending order"
+                      ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+        </th>
+        <th class="header-fittizio"></th>
+      </tr>
+
+      <tr *ngIf="dominiSearching">
+        <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+          <nextsdr-primeng-table-search-body [column]="col" [tableComponent]="dtDomini"> </nextsdr-primeng-table-search-body>
+        </th>
+        <th class="header-fittizio"></th>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER BODY-->
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+        </td>
+        <td class="row-button">
+          <button type="button" pButton icon="fa fa-edit" (click)="openDetail(rowData)"></button>
+          <button  type="button" pButton icon="fa fa-trash" (click)="_dominiTableSupport.deleteAndSubscribe(rowData)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER SOMMARIO-->
+    <ng-template pTemplate="summary" let-rowData>
+      <!--<div style="text-align:left">-->
+      <!--<button type="button" pButton icon="fa fa-plus" (click)="_dominiTableSupport.startEdit('INSERT', {})"-->
+      <!--label="Aggiungi"></button>-->
+      <!--</div>-->
+    </ng-template>
+  </p-table>
+
+  <button pbutton (click)="openInsert()"></button>
+  <p-panel #editPanel [toggleable]="false" [hidden]="!editing" >
+    <!--DIALOG DI MODIFICA/INSERIMENTO-->
+    <p-header>
+      <h3 *ngIf="editing ">Dettagli del dominio:
+        <span *ngIf="_dominiTableSupport.editComponent._entity.descrizione" style="font-style: italic;"> [{{_dominiTableSupport.editComponent._entity.descrizione}}] </span>
+        <span *ngIf="_dominiTableSupport.editComponent._entity.descrizione==null" style="font-style: italic;"> {{_dominiTableSupport.editComponent._entity.descrizione}} </span></h3>
+    </p-header>
+    <nextsdr-edit-primeng #editDialog [template]="atemplate" checkBeforeExit="true"
+                          (onStartEdit)="editing=true;" (onFinishEdit)="finish($event)" cancelLabel="Chiudi">
+    </nextsdr-edit-primeng>
+    <ng-template #atemplate let-entity="entity" let-mode="mode">
+      <div class="ui-g ui-fluid" *ngIf="entity">
+        <div class="ui-g-12">
+          <label for="descrizione" class="ui-g-1 detail-label" >Descrizione</label>
+          <input #desc pInputText id="descrizione" [(ngModel)]="entity.descrizione" class="ui-g-10 detail-field" style="float: right"/>
+        </div>
+        <div class="ui-g-12">
+          <p-tabView>
+            <p-tabPanel header="Tipi Evento Associati" leftIcon="pi pi-inbox">
+              <div class="ui-g-12">
+                <div class="ui-g-6">
+                  <h3>Tipi Evento Disponibili</h3>
+                  <p-table #dtTipiAll
+                           [columns]="_colsTipi" [rows]="10"
+                           [paginator]="true" [autoLayout]="true"
+                           [rowsPerPageOptions]="[5,10,15,20]"
+                           selectionMode="single"
+                           [value]="allTipi"
+                  >
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                      <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                          <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+                        </td>
+                        <td class="row-button">
+                          <button  type="button" pButton icon="fa fa-plus" (click)="addTipo(rowData,entity)"></button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+                <div class="ui-g-6">
+                  <h3>Tipi Evento Associati</h3>
+                  <p-table #dtTipiAdded
+                           [columns]="_colsTipi" [rows]="10"
+                           [paginator]="true" [autoLayout]="true"
+                           [rowsPerPageOptions]="[5,10,15,20]"
+                           selectionMode="single"
+                           [value]="entity.tipiEventoAbilitati"
+                  >
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                      <tr [pSelectableRow]="rowData">
+                        <td class="row-button">
+                          <button  type="button" pButton icon="fa fa-minus" (click)="resetTipo(rowData,entity)"></button>
+                        </td>
+                        <td *ngFor="let col of columns">
+                          <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+                        </td>
+
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="Fornitori Abilitati" leftIcon="pi pi-calendar">
+              <div class="ui-g-6">
+                <h3>Fornitori Disponibili</h3>
+                <p-table #dtFornitoriAll
+                         [columns]="_colsFornitori" [rows]="10"
+                         [paginator]="true" [autoLayout]="true"
+                         [rowsPerPageOptions]="[5,10,15,20]"
+                         selectionMode="single"
+                         [value]="allFornitori"
+                >
+                  <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                    <tr [pSelectableRow]="rowData">
+                      <td *ngFor="let col of columns">
+                        <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+                      </td>
+                      <td class="row-button">
+                        <button  type="button" pButton icon="fa fa-plus" (click)="addFornitore(rowData,entity)"></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div class="ui-g-6">
+                <h3>Fonitori Associati</h3>
+                <p-table #dtFornitoriAdded
+                         [columns]="_colsFornitori" [rows]="10"
+                         [paginator]="true" [autoLayout]="true"
+                         [rowsPerPageOptions]="[5,10,15,20]"
+                         selectionMode="single"
+                         [value]="entity.fornitoriAbilitati"
+                >
+                  <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                    <tr [pSelectableRow]="rowData">
+                      <td class="row-button">
+                        <button  type="button" pButton icon="fa fa-minus" (click)="resetFornitore(rowData,entity)"></button>
+                      </td>
+                      <td *ngFor="let col of columns">
+                        <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+                      </td>
+
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </div>
+
+    </ng-template>
+
+  </p-panel>
+</div>

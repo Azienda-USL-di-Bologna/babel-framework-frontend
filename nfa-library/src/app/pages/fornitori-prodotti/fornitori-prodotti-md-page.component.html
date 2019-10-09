@@ -1,0 +1,140 @@
+<div>
+
+  <h2>Fornitori-Prodotti</h2>
+  <div style = "width: 65%; float: left ">
+    <p-table #dtFornitori
+             [columns]="_colsMaster" [rows]="10"
+             [paginator]="true" [autoLayout]="true"
+             [rowsPerPageOptions]="[5,10,15,20]"
+             [lazy]="true"
+             selectionMode="single"
+             [hidden]="editing"
+             (onRowSelect)="setDetail($event)"
+    >
+      <!--TEMPLATE PER HEADERS-->
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+        </tr>
+
+        <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+            <input *ngSwitchCase="'string'" pInputText type="text"
+                   (input)="dtFornitori.filter($event.target.value, col.field, col.filterMatchMode)">
+            <input *ngSwitchCase="'boolean'" type="checkbox"
+                   (input)="dtFornitori.filter($event.target.value, col.field, col.filterMatchMode)">
+          </th>
+        </tr>
+      </ng-template>
+
+      <!--TEMPLATE PER BODY-->
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+        <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of columns">
+            <p *ngIf="col.fieldType=== 'string'"> {{rowData[col.field]}} </p>
+            <p *ngIf="col.fieldType=== 'object'"> {{col.field(rowData)}} </p>
+            <p *ngIf="col.fieldType=== 'boolean'"> {{rowData[col.field] !== null ? rowData[col.field] ? 'Si' : 'No' :
+              ''}} </p>
+          </td>
+          <td>
+
+            <button type="button" pButton icon="fa fa-edit" (click)="_fornitoriTableSupport.startEdit('UPDATE', rowData)"
+                    ></button>
+            <button type="button" pButton icon="fa fa-trash" (click)="deleteFornitore(rowData)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!--TEMPLATE PER SOMMARIO-->
+      <ng-template pTemplate="summary" let-rowData>
+        <div style="text-align:left">
+          <button type="button" pButton icon="fa fa-plus" (click)="_fornitoriTableSupport.startEdit('INSERT', {})"
+                  label="Aggiungi"></button>
+        </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <div style = "width: 35%; float: left " [hidden]="!idFornitoreSelezionato&&idFornitoreSelezionato===0">
+    <p-table #dtProdotti
+             [columns]="_colsDetail" [rows]="10"
+             [paginator]="true" [autoLayout]="true"
+             [rowsPerPageOptions]="[5,10,15,20]"
+             [lazy]="true"
+             selectionMode="single"
+             [hidden]="editing"
+    >
+      <!--TEMPLATE PER HEADERS-->
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+        </tr>
+
+        <tr>
+          <!--<th>-->
+            <!--<input pInputText type="text" [(ngModel)]="filterProdotti"  (input)="setFilterProdotti()"/>-->
+          <!--</th>-->
+          <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+            <input *ngSwitchCase="'string'" pInputText type="text" [(ngModel)]="filterProdottiObj[col.field]"
+                   (input)="dtProdotti.filter(filterProdottiObj[col.field], col.field, col.filterMatchMode)" />
+            <input *ngSwitchCase="'boolean'" type="checkbox" [(ngModel)]="filterProdottiObj[col.field]"
+                   (input)="dtProdotti.filter(filterProdottiObj[col.field], col.field, col.filterMatchMode)">
+          </th>
+        </tr>
+      </ng-template>
+
+      <!--TEMPLATE PER BODY-->
+      <ng-template pTemplate="body" let-rowProd let-columns="columns">
+
+        <tr [pSelectableRow]="rowProd">
+          <td *ngFor="let col of columns">
+            <p *ngIf="col.fieldType=== 'string'"> {{rowProd[col.field]}} </p>
+            <p *ngIf="col.fieldType=== 'object'"> {{col.field(rowData)}} </p>
+            <p *ngIf="col.fieldType=== 'boolean'"> {{rowProd[col.field] !== null ? rowProd[col.field] ? 'Si' : 'No' :
+              ''}} </p>
+          </td>
+          <!--<td>-->
+            <!--<button type="button" pButton icon="fa fa-trash" (click)="_fornitoriTableSupport.deleteAndSubscribe(rowData)"></button>-->
+          <!--</td>-->
+        </tr>
+      </ng-template>
+
+      <!--TEMPLATE PER SOMMARIO-->
+      <ng-template pTemplate="summary" let-rowData>
+        <div style="text-align:left">
+          <!--<button type="button" pButton icon="fa fa-plus" (click)="_fornitoriTableSupport.startEdit('INSERT', {})"-->
+                  <!--label="Aggiungi"></button>-->
+        </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <p-panel #editPanel [toggleable]="false" #editPanel [hidden]="!editing">
+  <nextsdr-edit-primeng #editFornitore  [template]="atemplate"
+                        (onStartEdit)="editing=true;" (onFinishEdit)="editing=false;">
+
+  </nextsdr-edit-primeng>
+  <ng-template #atemplate let-entity="entity" let-mode="mode" >
+    <div class="ui-g ui-fluid" *ngIf="entity">
+      <div class="ui-g-12">
+        <label for="descrizioneFornitore">Descrizione</label>
+        <input #desc pInputText id="descrizioneFornitore" [(ngModel)]="entity.descrizione"/>
+      </div>
+    </div>
+  </ng-template>
+  </p-panel>
+</div>

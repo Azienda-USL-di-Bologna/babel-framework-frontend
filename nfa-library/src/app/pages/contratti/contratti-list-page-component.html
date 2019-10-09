@@ -1,0 +1,101 @@
+<div>
+  <h2>Contratti</h2>
+
+  <p-table #dtContratti
+           [columns]="_cols" [rows]="10"
+           [paginator]="true" [autoLayout]="true"
+           [rowsPerPageOptions]="[5,10,15,20]"
+           [lazy]="true"
+           selectionMode="single"
+  >
+    <!--TEMPLATE PER HEADERS-->
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                      ariaLabelDesc="Activate to sort in descending order"
+                      ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+        </th>
+      </tr>
+
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+          <!--<input *ngSwitchCase="'string'" pInputText type="text"-->
+                 <!--(input)="dtContratti.filter($event.target.value, col.field, col.filterMatchMode)">-->
+         <nextsdr-primeng-table-search-body [column]="col" [tableComponent]="dtContratti"> </nextsdr-primeng-table-search-body>
+          <!--<p-calendar *ngSwitchCase="'Date'" dateFormat="dd M yy" appendTo="body" showButtonBar="true"-->
+                      <!--(onSelect)="onCalendarTest($event)" (onInput)="onCalendarTest($event)"-->
+                      <!--(onClose)="onCalendarCloseTest($event)" (onClearClick)="onCalendarClearTest($event)"></p-calendar>-->
+          <!--<p-calendar *ngSwitchCase="'DateTime'" dateFormat="dd M yy" appendTo="body"
+                  (onSelect)="onCalendarTest($event)" (onInput)="onCalendarTest($event)"></p-calendar>-->
+
+        </th>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER BODY-->
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          <!--<p *ngIf="col.fieldType=== 'string'"> {{rowData[col.field]}} </p>
+          <p *ngIf="col.fieldType=== 'Date'"> {{rowData[col.field] | date:'dd MMM yyyy'}} </p>
+          <p *ngIf="col.fieldType=== 'object'"> {{col.field(rowData)}} </p>-->
+          <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+        </td>
+        <td>
+          <button type="button" pButton icon="fa fa-trash" (click)="_contrattiTableSupport.deleteAndSubscribe(rowData)"
+                  label="Rimuovi"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER SOMMARIO-->
+    <ng-template pTemplate="summary" let-rowData>
+      <div style="text-align:left">
+        <button type="button" pButton icon="fa fa-plus" (click)="_contrattiTableSupport.startEdit('INSERT', {})"
+                label="Aggiungi"></button>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-dialog #dialog >
+    <!--DIALOG DI MODIFICA/INSERIMENTO-->
+    <nextsdr-edit-primeng #editComponent [template]="atemplate"
+                          (onStartEdit)="dialog.visible=true" (onFinishEdit)="dialog.visible=false">
+    </nextsdr-edit-primeng>
+    <ng-template #atemplate let-entity="entity" let-mode="mode">
+      <div class="ui-g ui-fluid" *ngIf="entity">
+        <div class="ui-g-6">
+          <label for="oggetto">Oggetto</label>
+          <input #desc pInputText id="oggetto" [(ngModel)]="entity.oggetto"/>
+        </div>
+        <div class="ui-g-6">
+          <label for="fornitore">Fornitore</label>
+          <nextsdr-primeng-autocomplete id="fornitore" field="descrizione" minlength="1" [(value)]="entity.fornitore"
+                                        [serviceQueringWrapper]="{service: fornitoreService}"
+                                        [dropdown]="true" appendTo="body"  >
+          </nextsdr-primeng-autocomplete>
+        </div>
+        <div class="ui-g-8">
+          <label class="ui-g-3 detail-label" for="dominio">Dominio</label>
+          <nextsdr-primeng-autocomplete id="dominio" field="descrizione" minlength="1" [(value)]="entity.dominio"
+                                        [serviceQueringWrapper]="{service: dominioService}"
+                                        [dropdown]="true" appendTo="body" (valueChange)="dominioSelezionato($event)" >
+          </nextsdr-primeng-autocomplete>
+        </div>
+        <div class="ui-g-8" [hidden]="!entity.dominio">
+          <label class="ui-g-3 detail-label" for="dec">Utente Dec</label>
+          <nextsdr-primeng-autocomplete #utenteAutoComplete class="ui-g-9 autocomplete-field" id="dec" field="username" minlength="1" [(value)]="entity.utenteDEC"
+                                        [serviceQueringWrapper]="{service: utenteService, initialFiltersAndSorts:dominioFilter}"
+                                        [dropdown]="true" appendTo="body" emptyMessage="Nessun Utente che abbia ruoli collegati al dominio" >
+          </nextsdr-primeng-autocomplete>
+        </div>
+
+      </div>
+    </ng-template>
+  </p-dialog>
+
+
+</div>

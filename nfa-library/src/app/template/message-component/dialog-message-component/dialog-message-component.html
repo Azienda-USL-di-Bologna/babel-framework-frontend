@@ -1,0 +1,22 @@
+<p-toast position="center"  [key]="_KEY_TOASTS_MESSAGE_DIALOG" [modal]="true" [baseZIndex]="5000">
+  <ng-template let-message pTemplate="message">
+    <div style="text-align: center;" class="ui-g ui-fluid">
+      <div [ngSwitch]="message.severity" class="ui-g-2" style="margin: auto;">
+        <i *ngSwitchCase="'info'" class="fa fa-info-circle" style="font-size: 3em"></i>
+        <i *ngSwitchCase="'success'" class="fa fa-check-circle" style="font-size: 3em"></i>
+        <i *ngSwitchCase="'warn'" class="fa fa-exclamation-triangle" style="font-size: 3em"></i>
+        <i *ngSwitchCase="'error'" class="fa fa-exclamation-circle" style="font-size: 3em"></i>
+      </div>
+
+      <div class="ui-g-10">
+        <h3>{{message.summary}}</h3>
+        <p style="word-wrap: break-word;">{{message.detail}}</p>
+      </div>
+    </div>
+    <div class="ui-g ui-fluid">
+      <div *ngFor="let button of _buttons" [class]="'ui-g-'+(12 / _buttonsNumber)">
+        <button type="button" pButton (click)="buttonClick(button)" [label]="button.caption" ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>

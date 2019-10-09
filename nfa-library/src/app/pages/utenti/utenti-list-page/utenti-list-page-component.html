@@ -1,0 +1,192 @@
+<div>
+  <h2>Utenti</h2>
+
+  <p-table #dtUtenti
+           [columns]="_cols" [rows]="10"
+           [paginator]="true" [autoLayout]="true"
+           [rowsPerPageOptions]="[5,10,15,20]"
+           [lazy]="true"
+           selectionMode="single"
+           [hidden]="editing"
+  >
+    <!--TEMPLATE PER HEADERS-->
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                      ariaLabelDesc="Activate to sort in descending order"
+                      ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+        </th>
+      </tr>
+
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+          <input *ngSwitchCase="'string'" pInputText type="text"
+                 (input)="dtUtenti.filter($event.target.value, col.field, col.filterMatchMode)">
+          <input *ngSwitchCase="'boolean'" type="checkbox"
+                 (input)="dtUtenti.filter($event.target.value, col.field, col.filterMatchMode)">
+        </th>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER BODY-->
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          <p *ngIf="col.fieldType=== 'string'"> {{rowData[col.field]}} </p>
+          <p *ngIf="col.fieldType=== 'object'"> {{col.field(rowData)}} </p>
+          <p *ngIf="col.fieldType=== 'boolean'"> {{rowData[col.field] !== null ? rowData[col.field] ? 'Si' : 'No' :
+            ''}} </p>
+        </td>
+        <td>
+          <button type="button" pButton icon="fa fa-trash" (click)="_userTableSupport.deleteAndSubscribe(rowData)"
+                  label="Rimuovi"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER SOMMARIO-->
+    <ng-template pTemplate="summary" let-rowData>
+      <div style="text-align:left">
+        <button type="button" pButton icon="fa fa-plus" (click)="_userTableSupport.startEdit('INSERT', {})"
+                label="Aggiungi"></button>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <!--DIALOG DI MODIFICA/INSERIMENTO-->
+  <!--<app-nextsdr-edit-primeng-dialog #editDialog [template]="atemplate"-->
+                                   <!--[config]="{header: 'Modifica',width:800, heigth:500 }">-->
+  <!--</app-nextsdr-edit-primeng-dialog>-->
+  <!--<ng-template #atemplate let-entity="entity" let-mode="mode">-->
+    <!--<div class="ui-g ui-fluid" *ngIf="entity">-->
+      <!--<div class="ui-g-6">-->
+        <!--<label for="usernameUtente">Username</label>-->
+        <!--<input #desc pInputText id="usernameUtente" [(ngModel)]="entity.username"/>-->
+      <!--</div>-->
+      <!--<div class="ui-g-6">-->
+        <!--<label for="emailUtente">Email</label>-->
+        <!--<input pInputText id="emailUtente" [(ngModel)]="entity.email"/>-->
+      <!--</div>-->
+      <!--<div class="ui-g-6">-->
+        <!--<label for="nomeUtente">Nome</label>-->
+        <!--<input pInputText id="nomeUtente" [(ngModel)]="entity.nome"/>-->
+      <!--</div>-->
+      <!--<div class="ui-g-6">-->
+        <!--<label for="cognomeUtente">Cognome</label>-->
+        <!--<input pInputText id="cognomeUtente" [(ngModel)]="entity.cognome"/>-->
+      <!--</div>-->
+
+      <!--<p-table #dtRuoli></p-table>-->
+    <!--</div>-->
+  <!--</ng-template>-->
+
+
+  <p-panel #editPanel [toggleable]="false" #editPanel [hidden]="!editing">
+    <!--<p-header>-->
+      <!--<button type="button" pButton icon="fa fa-close"  label="Cancel" (click)="_userTableSupport.detailSupport.hide()">Torna alla tabella</button>-->
+      <!--<span>Dettagli dell'utente {{_userTableSupport.detailSupport.entity.nome}} {{_userTableSupport.detailSupport.entity.cognome}}</span>-->
+    <!--</p-header>-->
+
+    <nextsdr-edit-primeng #editComponent  [template]="atemplate"
+    (onStartEdit)="editing=true;" (onFinishEdit)="editing=false;" >
+
+    </nextsdr-edit-primeng>
+    <ng-template #atemplate let-entity="entity" let-mode="mode" >
+      <div class="ui-g ui-fluid" *ngIf="entity">
+        <div class="ui-g-6">
+          <label for="usernameUtente">Username</label>
+          <input #desc pInputText id="usernameUtente" [(ngModel)]="entity.username"/>
+        </div>
+        <div class="ui-g-6">
+          <label for="emailUtente">Email</label>
+          <input pInputText id="emailUtente" [(ngModel)]="entity.email"/>
+        </div>
+        <div class="ui-g-6">
+          <label for="nomeUtente">Nome</label>
+          <input pInputText id="nomeUtente" [(ngModel)]="entity.nome"/>
+        </div>
+        <div class="ui-g-6">
+          <label for="cognomeUtente">Cognome</label>
+          <input pInputText id="cognomeUtente" [(ngModel)]="entity.cognome"/>
+        </div>
+
+
+        <p-table #dtRuoli [columns]="_rolesCols" [rows]="10"
+                 [paginator]="false" [autoLayout]="true"
+                 [rowsPerPageOptions]="[5,10,15,20]"
+                 [lazy]="false" [value]="entity.ruoliPerDomini"
+                 selectionMode="single">
+
+          <!--TEMPLATE PER HEADERS-->
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+              </th>
+            </tr>
+          </ng-template>
+
+          <!--TEMPLATE PER BODY-->
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+            <tr [pSelectableRow]="rowData">
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+
+                    <nextsdr-primeng-autocomplete field="descrizione" minlength="100" [(value)]="rowData.dominio"
+                                                      [serviceQueringWrapper]="{service: dominioService}" [dropdown]="true" appendTo="body">
+                    </nextsdr-primeng-autocomplete>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{rowData.dominio ? rowData.dominio.descrizione : ''}}
+                  </ng-template>
+                </p-cellEditor>
+                <!--<p > {{rowData.dominio ? rowData.dominio.descrizione : ''}} </p>-->
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="_rolesList" [(ngModel)]="rowData.utenteRole" [style]="{'width':'100%'}" appendTo="body"></p-dropdown>
+                  </ng-template>
+
+                  <ng-template pTemplate="output">
+                    {{parseUserRole(rowData.utenteRole)}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                <button type="button" pButton icon="fa fa-trash" (click)="deleteUserRole(rowData, entity)"
+                        label="Rimuovi"></button>
+              </td>
+            </tr>
+          </ng-template>
+
+          <!--TEMPLATE PER SOMMARIO-->
+          <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+              <button type="button" pButton icon="fa fa-plus" (click)="addUserRole(entity)"
+                      label="Aggiungi"></button>
+            </div>
+          </ng-template>
+
+        </p-table>
+      </div>
+
+
+
+      <!--<p-footer>-->
+        <!--<div class="ui-dialog-buttonpane ui-helper-clearfix">-->
+          <!--<button type="button" pButton icon="fa fa-close"  label="Cancel" (click)="_userTableSupport.detailSupport.save()">Salva</button>-->
+          <!--<button type="button" pButton icon="fa fa-check"  label="Save" (click)="_userTableSupport.detailSupport.cancel()">Annulla</button>-->
+        <!--</div>-->
+      <!--</p-footer>-->
+    </ng-template>
+    <!--<p-messages [key]="_userTableSupport.detailSupport.messageKey"></p-messages>-->
+
+  </p-panel>
+
+</div>

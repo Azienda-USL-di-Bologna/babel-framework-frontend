@@ -1,0 +1,18 @@
+<div class="ui-g">
+  <div class="ui-g-1">
+    <button pButton type="button" icon = "fa fa-navicon" (click)="toggleMenu()"></button>
+  </div>
+  <div class="ui-g-2">
+    <div class = "nome-app">DEC Monitor</div>
+  </div>
+  <div class="ui-g-7">
+    <div class = "ruolo" *ngIf="loggedUser&&loggedUser.ruoloPerDominioDTO"> {{decodeUserRole()}}</div>
+  </div>
+  <div class="ui-g-2" style = "text-align: right">
+    <button pButton type="button" icon = 'fa fa-user'></button>
+    <button pButton type="button" icon = 'fa fa-gear'></button>
+    <button pButton type="button" icon="fa fa-sign-out" (click)="logout()"></button>
+  </div>
+
+
+</div>

@@ -1,0 +1,65 @@
+<div id="loginComponentWrapper">
+  <!--<div class="row">-->
+    <!--<div class="col-lg-2">-->
+      <!--<a id="headerLogoTondo" routerLink="/home"><img height="45px" width="55px" alt="AAAgents"-->
+                                                      <!--src="assets/img/logo_262_263.png"></a>-->
+    <!--</div>-->
+    <!--<div class="col-lg-3">-->
+      <!--<a id="headerLogoOrizzontale" routerLink="/home"><img height="50px" alt="AAAgents"-->
+                                                            <!--src="assets/img/logo_aaagents_horizontal.png"></a>-->
+    <!--</div>-->
+  <!--</div>-->
+  <h2>Esegui il Login</h2>
+  <div class="middleDiv">
+    <div style="display: block">
+      <form class="form" [formGroup]="loginForm"
+            (submit)="login($event)">
+        <div>
+          <label for="username">Email: </label>
+          <input type="text" class="form-control" required [(ngModel)]="username"
+                 formControlName="username"
+                 id="username">
+        </div>
+        <div>
+          <label for="password">Password: </label>
+          <input type="password" class="form-control" required [(ngModel)]="password"
+                 formControlName="password"
+                 id="password">
+        </div>
+        <div>
+          <a (click)="openPopupRecoveryPassword()">Recupera Password</a>
+        </div>
+        <div style="float: right">
+          <button type="submit" [disabled]="!loginForm.valid">Login</button>
+        </div>
+      </form>
+    </div>
+    <!--&lt;!&ndash;<div>{{errorMessage}}</div>&ndash;&gt;-->
+  </div>
+</div>
+
+<!--<dx-popup #popupRecoveryPassword-->
+          <!--[width]="500"-->
+          <!--[height]="300"-->
+          <!--[showTitle]="true"-->
+          <!--title="Recupero password"-->
+          <!--[dragEnabled]="false"-->
+          <!--[closeOnOutsideClick]="true"-->
+          <!--[showCloseButton]="false"-->
+<!--&gt;-->
+  <!--<div *dxTemplate="let data of 'content'">-->
+    <!--<form class="form" [formGroup]="recoveryForm"-->
+          <!--(submit)="login($event)">-->
+      <!--<div>-->
+        <!--<label for="emailRecovery">Inserisci l'email con cui ti sei registrato:</label>-->
+        <!--<input type="text" required [(ngModel)]="recoveryEmail" class="form-control"-->
+               <!--formControlName="email"-->
+               <!--id="emailRecovery">-->
+      <!--</div>-->
+      <!--<div style="float: right; margin-top: 10px">-->
+        <!--<button type="button" (click)="recoveryPassword()"-->
+                <!--[disabled]="!recoveryForm.valid">Recupera</button>-->
+      <!--</div>-->
+    <!--</form>-->
+  <!--</div>-->
+<!--</dx-popup>-->

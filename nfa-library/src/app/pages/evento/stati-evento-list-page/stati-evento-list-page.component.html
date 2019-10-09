@@ -1,0 +1,88 @@
+<div>
+  <h2>Stati Evento</h2>
+  <button (click)="toogleSearch()" type="button" pButton label="Refreshami"></button>
+
+  <p-table #dtStati
+           [columns]="_cols" [rows]="10"
+           [paginator]="true" [autoLayout]="true"
+           [rowsPerPageOptions]="[5,10,15,20]"
+           [lazy]="true"
+           selectionMode="single"
+           width="100%"
+  >
+    <!--TEMPLATE PER HEADERS-->
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                      ariaLabelDesc="Activate to sort in descending order"
+                      ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+        </th>
+      </tr>
+
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.fieldType">
+          <nextsdr-primeng-table-search-body [column]="col" [tableComponent]="dtStati" *ngIf="searching"> </nextsdr-primeng-table-search-body>
+        </th>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER BODY-->
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          <nextsdr-primeng-table-column-body [column]="col" [rowData]="rowData"></nextsdr-primeng-table-column-body>
+        </td>
+        <td class="row-button">
+          <button type="button" pButton icon="fa fa-trash" (click)="_tableSupport.deleteAndSubscribe(rowData)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!--TEMPLATE PER SOMMARIO-->
+    <ng-template pTemplate="summary" let-rowData>
+      <div style="text-align:left">
+        <button type="button" pButton icon="fa fa-plus" (click)="_tableSupport.startEdit('INSERT',_emptyStato)"
+                label="Aggiungi"></button>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-dialog #dialog [header]="'Dettaglio Stato Evento'" [closable]="false">
+    <!--DIALOG DI MODIFICA/INSERIMENTO-->
+    <nextsdr-edit-primeng #editDialog [template]="atemplate"
+                          (onStartEdit)="dialog.visible=true;" (onFinishEdit)="dialog.visible=false" >
+    </nextsdr-edit-primeng>
+    <ng-template #atemplate let-entity="entity" let-mode="mode">
+      <div class="ui-g ui-fluid" *ngIf="entity">
+        <div class="ui-g-6">
+          <label for="descrizione">Descrizione</label>
+          <input #desc pInputText id="descrizione" [(ngModel)]="entity.descrizione"/>
+        </div>
+        <div class="ui-g-3">
+          <label for="pubblicato">Pubblicato</label>
+          <p-checkbox id="pubblicato" [(ngModel)]="entity.pubblicato" binary="true"></p-checkbox>
+        </div>
+        <div class="ui-g-3">
+          <label for="statoDefault">Default</label>
+          <p-checkbox id="statoDefault" [(ngModel)]="entity.statoEventoDefault" binary="true"></p-checkbox>
+        </div>
+        <!--<div class="ui-g-3">-->
+          <!--<label for="statoDefault">Default</label>-->
+          <!--<input #def pInputText id="statoDefault" [(ngModel)]="entity.statoEventoDefault"/>-->
+        <!--</div>-->
+        <!--<div class="ui-g-6">-->
+          <!--<label for="fornitore">Fornitore</label>-->
+          <!--<nextsdr-primeng-autocomplete id="fornitore" field="descrizione" minlength="1" [(value)]="entity.fornitore"-->
+                                        <!--[serviceQueringWrapper]="{service: fornitoreService}"-->
+                                        <!--[dropdown]="true" appendTo="body" >-->
+          <!--</nextsdr-primeng-autocomplete>-->
+        <!--</div>-->
+      </div>
+    </ng-template>
+  </p-dialog>
+
+
+</div>

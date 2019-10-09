@@ -1,0 +1,24 @@
+<div>
+  <p-dialog header="Selezione Ruolo / Dominio" [visible]="true">
+    <p-dropdown [options]="domini" [(ngModel)]="selectedDominio" [style]="{'width':'550px'}" placeholder=" - Seleziona un Dominio/Ruolo -" appendTo="body">
+      <ng-template let-selectedItem pTemplate="selectedItem">
+        <span style="vertical-align:middle">
+          <span *ngIf="selectedItem.value.idDominio">
+            <span>Dominio: </span>
+            <span>{{selectedItem.value.descrizioneDominio}}</span> -
+          </span>
+          <span>Ruolo: </span>
+          <span>{{GetRoleName(selectedItem.value.utenteRole)}}</span>
+        </span>
+      </ng-template>
+      <ng-template let-item pTemplate="item">
+        <div class="ui-helper-clearfix" style="position: relative;height:25px; vertical-align:middle">
+          <span *ngIf="item.value.idDominio"><span>Dominio: </span><span>{{item.value.descrizioneDominio}}</span> - </span>
+          <span>Ruolo: </span><span>{{GetRoleName(item.value.utenteRole)}}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+
+    <button type="button" pButton (click)="selectDominio()" label="OK"></button>
+  </p-dialog>
+</div>
