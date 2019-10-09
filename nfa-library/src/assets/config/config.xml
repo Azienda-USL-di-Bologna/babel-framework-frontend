@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <base-url>http://localhost:8080</base-url>
+  <login-relative-url>/login</login-relative-url>
+  <logout-relative-url>/logout</logout-relative-url>
+  <odata-relative-url>/odata.svc</odata-relative-url>
+  <utente-me-relative-url>/utente/me</utente-me-relative-url>
+
+
+  <account-local-storage-key>DECMonitorAccount</account-local-storage-key>
+</config>
